@@ -86,7 +86,7 @@ class ImportDataCommand extends Command
 
 
         try {
-            $connectionParams = ['url' => "mysql://iptv:iptv@127.0.0.1:3306/xtream_iptvpro?charset=utf8"];
+            $connectionParams = ['url' => "mysql://iptv:iptv@localhost:3306/xtream_iptvpro?charset=utf8"];
             $this->connection = DriverManager::getConnection($connectionParams, $config);
 
             $this->dbPrefix = "";
