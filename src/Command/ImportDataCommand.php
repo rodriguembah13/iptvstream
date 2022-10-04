@@ -83,13 +83,14 @@ class ImportDataCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $arg1 = $input->getArgument('arg1');
         $config = new Configuration();
-        $connectionParams = ['url' => "mysql://iptv:iptv@127.0.0.1:3306/xtream_iptvpro?charset=utf8"];
-        $this->connection = DriverManager::getConnection($connectionParams, $config);
 
-        $this->dbPrefix = "";
-        $password = 'tvplus';
 
         try {
+            $connectionParams = ['url' => "mysql://iptv:iptv@127.0.0.1:3306/xtream_iptvpro?charset=utf8"];
+            $this->connection = DriverManager::getConnection($connectionParams, $config);
+
+            $this->dbPrefix = "";
+            $password = 'tvplus';
             $users = $this->fetchAllFromImport('users');
         } catch (Exception $ex) {
             $io->error('Failed to load users: ' . $ex->getMessage());
@@ -163,7 +164,7 @@ class ImportDataCommand extends Command
             $user->setEmail($oldUser['username']."@iptv.com");
             $user->setUsername($oldUser['username']);
             $plainPassword = "iptv";
-            $hashedPassword = $this->passwordEncoder->hashPassword($user, $plainPassword);
+            $hashedPassword = $this->encoder->hashPassword($user, $plainPassword);
             $user->setPassword($hashedPassword);
             if (!empty($data['phone'])){
                 $user->setPhone($data['phone']);
