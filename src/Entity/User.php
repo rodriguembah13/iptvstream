@@ -66,6 +66,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $avatar;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $userid;
+
+    /**
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $bouquets = [];
+
     public function __construct()
     {
     }
@@ -262,6 +272,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsactivate(?bool $isactivate): self
     {
         $this->isactivate = $isactivate;
+
+        return $this;
+    }
+
+    public function getUserid(): ?int
+    {
+        return $this->userid;
+    }
+
+    public function setUserid(?int $userid): self
+    {
+        $this->userid = $userid;
+
+        return $this;
+    }
+
+    public function getBouquets(): ?array
+    {
+        return $this->bouquets;
+    }
+
+    public function setBouquets(?array $bouquets): self
+    {
+        $this->bouquets = $bouquets;
 
         return $this;
     }

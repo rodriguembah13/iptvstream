@@ -40,6 +40,11 @@ class Bouquet
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $created;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $bouquetid;
     public function getId(): ?int
     {
         return $this->id;
@@ -99,6 +104,18 @@ class Bouquet
     public function setChanelids(?array $chanelids): self
     {
         $this->chanelids = $chanelids;
+
+        return $this;
+    }
+
+    public function getBouquetid(): ?int
+    {
+        return $this->bouquetid;
+    }
+
+    public function setBouquetid(?int $bouquetid): self
+    {
+        $this->bouquetid = $bouquetid;
 
         return $this;
     }
