@@ -64,7 +64,29 @@ class IptvApiController extends AbstractFOSRestController
         $view = $this->view($values, Response::HTTP_OK, []);
         return $this->handleView($view);
     }
-
+    /**
+     * @Rest\Get("/v1/bouquets", name="api_bouquets")
+     * @param Customer $customer
+     * @return Response
+     */
+    public function getBouquets()
+    {
+        $bouquets = $this->bouquetRepository->findAll();
+        $arrays = [];
+        foreach ($bouquets as $bouquet) {
+            $arrays[] = [
+                'id' => $bouquet->getId(),
+                'bouquetid' => $bouquet->getBouquetid(),
+                'name' => $bouquet->getName(),
+                'price' => $bouquet->getPrice(),
+                'channelsize'=>count($bouquet->getChanelids()),
+                'seriesize'=>count($bouquet->getSerieids()),
+                'datecreation' => $bouquet->getBouquetorder(),
+            ];
+        }
+        $view = $this->view($arrays, Response::HTTP_OK, []);
+        return $this->handleView($view);
+    }
     /**
      * @Rest\Get("/v1/bouquetcustomer/{id}", name="api_bouquetcustomer")
      * @param Customer $customer
@@ -72,18 +94,17 @@ class IptvApiController extends AbstractFOSRestController
      */
     public function getBouquetByCustomer(Customer $customer)
     {
-        $souscriptions = $customer->getSouscriptions();
-        $bouquets = array_map(function ($item) {
-            return $item->getBouquet();
-        }, $souscriptions->getValues());
-        // $values = $this->endpointsService->getLiveStreambyCategory($request->get('category'));
+        $bouquetids = $customer->getCompte()->getBouquets();
         $arrays = [];
-        foreach ($souscriptions as $souscription) {
+        foreach ($this->bouquetRepository->findByBouquetIds($bouquetids) as $bouquet) {
             $arrays[] = [
-                'id' => $souscription->getBouquet()->getId(),
-                'name' => $souscription->getBouquet()->getName(),
-                'price' => $souscription->getBouquet()->getPrice(),
-                'datecreation' => $souscription->getExpiredAt(),
+                'id' => $bouquet->getId(),
+                'bouquetid' => $bouquet->getBouquetid(),
+                'name' => $bouquet->getName(),
+                'price' => $bouquet->getPrice(),
+                'channelsize'=>count($bouquet->getChanelids()),
+                'seriesize'=>count($bouquet->getSerieids()),
+                'datecreation' => $bouquet->getBouquetorder(),
             ];
         }
         $view = $this->view($arrays, Response::HTTP_OK, []);
@@ -106,7 +127,16 @@ class IptvApiController extends AbstractFOSRestController
                 return false;
             }
         });
+   /*     $data_series=$this->endpointsService->getSeries();
+        $arrayseries_= array_filter($data_series,function ($item) use($bouquet){
+            if (in_array($item['num'],$bouquet->getSerieids())){
+                return true;
+            }else{
+                return false;
+            }
+        });*/
         $arrays = [];
+        $arrays_series = [];
         foreach ($arrays_ as $channel) {
             $arrays[] = [
                 'num' => $channel['num'],
@@ -123,7 +153,25 @@ class IptvApiController extends AbstractFOSRestController
                 'tv_archive_duration' => $channel['tv_archive_duration'],
             ];
         }
-        $view = $this->view($arrays, Response::HTTP_OK, []);
+       /* foreach ($arrayseries_ as $serie) {
+            $arrays_series[] = [
+                'num' => $serie['num'],
+                'name' => $serie['name'],
+                'stream_type' => $serie['stream_type'],
+                'stream_id' => $serie['stream_id'],
+                'stream_icon' => $serie['stream_icon'],
+                'epg_channel_id' => $serie['epg_channel_id'],
+                'added' => $serie['added'],
+                'category_id' => $serie['category_id'],
+                'custom_sid' => $serie['custom_sid'],
+                'tv_archive' => $serie['tv_archive'],
+                'direct_source' => $serie['direct_source'],
+                'tv_archive_duration' => $serie['tv_archive_duration'],
+            ];
+        }*/
+        $view = $this->view(
+           $arrays
+        , Response::HTTP_OK, []);
         return $this->handleView($view);
     }
 

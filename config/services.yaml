@@ -10,6 +10,9 @@ parameters:
     EKOLOAPI: '%env(resolve:EKOLOAPI)%'
     EKOLO_SECRETKEY: '%env(resolve:EKOLO_SECRETKEY)%'
     EKOLO_URL: '%env(resolve:EKOLO_URL)%'
+    FLU_PUBLIC: '%env(resolve:FLU_PUBLIC)%'
+    FLU_SECRET: '%env(resolve:FLU_SECRET)%'
+    FLU_ENCRIPT: '%env(resolve:FLU_ENCRIPT)%'
 
 services:
     # default configuration for services in *this* file

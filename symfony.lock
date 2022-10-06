@@ -80,9 +80,6 @@
     "egulias/email-validator": {
         "version": "3.1.2"
     },
-    "fabpot/goutte": {
-        "version": "v4.0.2"
-    },
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.5"
     },
@@ -93,6 +90,15 @@
             "branch": "master",
             "version": "2.3",
             "ref": "a9f2e49180f75cdc71ae279a929c4b2e0638de84"
+        }
+    },
+    "friendsofsymfony/rest-bundle": {
+        "version": "3.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "2.2",
+            "ref": "fa845143b7e0a4c70aedd1a88c549e6d977e9ae5"
         }
     },
     "guzzlehttp/guzzle": {
@@ -107,26 +113,11 @@
     "hamcrest/hamcrest-php": {
         "version": "v2.0.1"
     },
-    "knpuniversity/oauth2-client-bundle": {
-        "version": "2.10",
-        "recipe": {
-            "repo": "github.com/symfony/recipes-contrib",
-            "branch": "master",
-            "version": "1.20",
-            "ref": "1ff300d8c030f55c99219cc55050b97a695af3f6"
-        }
+    "handcraftedinthealps/rest-routing-bundle": {
+        "version": "1.0.6"
     },
     "laminas/laminas-code": {
         "version": "4.5.1"
-    },
-    "league/oauth2-client": {
-        "version": "2.6.1"
-    },
-    "league/oauth2-facebook": {
-        "version": "2.2.0"
-    },
-    "league/oauth2-google": {
-        "version": "4.0.0"
     },
     "lorenzo/pinky": {
         "version": "1.0.5"
@@ -139,6 +130,18 @@
     },
     "monolog/monolog": {
         "version": "2.3.5"
+    },
+    "nelmio/cors-bundle": {
+        "version": "2.2",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "1.5",
+            "ref": "6bea22e6c564fba3a1391615cada1437d0bde39c"
+        },
+        "files": [
+            "config/packages/nelmio_cors.yaml"
+        ]
     },
     "nikic/php-parser": {
         "version": "v4.13.2"
@@ -154,9 +157,6 @@
     },
     "oro/doctrine-extensions": {
         "version": "2.0.1"
-    },
-    "paragonie/random_compat": {
-        "version": "v9.99.100"
     },
     "php-webdriver/webdriver": {
         "version": "1.12.0"
@@ -326,15 +326,6 @@
             "src/Controller/.gitignore",
             "src/Kernel.php"
         ]
-    },
-    "symfony/google-mailer": {
-        "version": "5.4",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "4.4",
-            "ref": "f8fd4ddb9b477510f8f4bce2b9c054ab428c0120"
-        }
     },
     "symfony/http-client": {
         "version": "v5.4.3"

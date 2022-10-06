@@ -269,9 +269,9 @@ class DefaultController extends AbstractController
             $bouquet=$this->bouquetRepository->find($request->get('id'));
 
         }
-        $bouquet->setName($request->get('name'));
+       // $bouquet->setName($request->get('name'));
         $bouquet->setPrice($request->get('price'));
-        $bouquet->setChanelids($chanels);
+       // $bouquet->setChanelids($chanels);
         $entityManager->flush();
         return new JsonResponse(["id" => $chanels], 200);
     }

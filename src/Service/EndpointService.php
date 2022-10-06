@@ -45,9 +45,6 @@ class EndpointService
         return $response;
     }
     function getLiveStreambyCategory($category){
-     /*   $endpoint ="/player_api.php?username=".$this->params->get('API_USERNAME').
-            "&password=".$this->params->get('API_USERNAME')."&action=get_live_streams&category_id=".$category;
-       */
         $endpoint =$this->params->get('API_URL')."/player_api.php";
         $res = $this->client->get($endpoint,
             ['query' => [
@@ -115,6 +112,18 @@ class EndpointService
                 'password'=>$this->params->get('API_USERNAME'),
                 'action'=>'get_series',
                 'category_id'=>$category
+
+            ]]);
+        $valresp = json_decode($res->getBody(), true);
+        return $valresp;
+    }
+    function getSeries(){
+        $endpoint =$this->params->get('API_URL')."/player_api.php";
+        $res = $this->client->get($endpoint,
+            ['query' => [
+                'username'=>$this->params->get('API_USERNAME'),
+                'password'=>$this->params->get('API_USERNAME'),
+                'action'=>'get_series',
 
             ]]);
         $valresp = json_decode($res->getBody(), true);

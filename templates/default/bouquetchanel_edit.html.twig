@@ -27,17 +27,17 @@
                 <div class="row mb-3">
                     <label class="col-sm-3 form-label">Channels</label>
                     <div class="col-sm-9">
-                        <select class="js-example-basic-single form-select mb-3" id="chanels" data-width="100%">
+                       {# <select class="js-example-basic-single form-select mb-3" id="chanels" data-width="100%">
                             {% for item in data %}
                                 <option data-name="{{ item.name }}" value="{{ item.num }}">{{ item.name }}</option>
                             {% endfor %}
-                        </select>
+                        </select>#}
                         <hr>
                         <div class="row mb-3">
                             <h4 class="mb-3">Lists chanels</h4>
                             <ul class="list-group " id="chanels_item">
                                 {% for val in chanels %}
-                                    <li class='list-group-item' id='line_{{ val.num }}' data-value='{{ val.num }}'>{{ val.name }}<a onclick='removeRowAjax({{ val.num }})' class='btn btn-sm btn-danger float-end'>Remove</a></li>
+                                    <li class='list-group-item' id='line_{{ val.num }}' data-value='{{ val.num }}'>{{ val.name }}</li>
                                 {% endfor %}
                             </ul>
                         </div>

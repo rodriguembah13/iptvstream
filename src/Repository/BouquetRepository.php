@@ -39,20 +39,19 @@ class BouquetRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return Bouquet[] Returns an array of Bouquet objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('b')
-//            ->andWhere('b.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('b.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * @param $values
+     * @return Bouquet[] Returns an array of Bouquet objects
+     */
+    public function findByBouquetIds($values): array
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('b')
+            ->from(Bouquet::class,'b');
+        $qb->andWhere('b.bouquetid IN (:ids)')
+            ->setParameter('ids', $values);
+        return $qb->getQuery()->getResult();
+    }
 
 //    public function findOneBySomeField($value): ?Bouquet
 //    {

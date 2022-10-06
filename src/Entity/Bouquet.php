@@ -35,7 +35,15 @@ class Bouquet
     /**
      * @ORM\Column(type="json", nullable=true)
      */
-    private $chanelids = [];
+    private $chanelids;
+    /**
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $serieids;
+    /**
+     * @ORM\Column(type="integer", length=255, nullable=true)
+     */
+    private $bouquetorder;
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
@@ -106,6 +114,38 @@ class Bouquet
         $this->chanelids = $chanelids;
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSerieids(): array
+    {
+        return $this->serieids;
+    }
+
+    /**
+     * @param array $serieids
+     */
+    public function setSerieids(array $serieids): void
+    {
+        $this->serieids = $serieids;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBouquetorder()
+    {
+        return $this->bouquetorder;
+    }
+
+    /**
+     * @param mixed $bouquetorder
+     */
+    public function setBouquetorder($bouquetorder): void
+    {
+        $this->bouquetorder = $bouquetorder;
     }
 
     public function getBouquetid(): ?int
