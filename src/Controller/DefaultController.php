@@ -152,9 +152,6 @@ class DefaultController extends AbstractController
                     return '<span>' . $value . '</span>';
                 }
             ])
-            ->add('tokentransaction', TextColumn::class,[
-                'label' => 'reference',
-            ])
             ->add('customer', TextColumn::class,[
                 'label' => 'Nom du client',
                 'field'=>'compte.name'
@@ -206,19 +203,6 @@ class DefaultController extends AbstractController
     public function customers(Request $request): Response
     {
         $table = $this->dataTableFactory->create()
-            ->add('datecreation', DateTimeColumn::class,[
-                'label' => 'Date ',
-                'format'=>"Y-m-d"
-            ])
-            ->add('amount', TextColumn::class, [
-                'label' => 'Amount',
-                'render' => function ($value, $context) {
-                    return '<span>' . $value . '</span>';
-                }
-            ])
-            ->add('phone', TextColumn::class,[
-                'label' => 'Phone',
-            ])
             ->add('customer', TextColumn::class,[
                 'label' => 'Name',
                 'field'=>'compte.name'
@@ -227,6 +211,10 @@ class DefaultController extends AbstractController
                 'label' => 'Email',
                 'field'=>'compte.email'
             ])
+            ->add('phone', TextColumn::class,[
+                'label' => 'Phone',
+            ])
+
             ->add('datevalidite', DateTimeColumn::class,[
                 'label' => 'Date Expiration',
                 'field'=>'customer.expiredAt',
