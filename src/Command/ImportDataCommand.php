@@ -226,7 +226,10 @@ class ImportDataCommand extends Command
            return !in_array($item->getUserid(),$fromIDS);
         });
         foreach ($notINS as $user){
-            $this->doctrine->getManager()->remove($user);
+            if ($user->getEmail() !="admin@localhost.com"){
+                $this->doctrine->getManager()->remove($user);
+            }
+
         }
         $this->doctrine->getManager()->flush();
     }
