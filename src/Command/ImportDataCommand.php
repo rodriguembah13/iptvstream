@@ -30,13 +30,14 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ImportDataCommand extends Command
 {
+    //5-59/15 * * * * php /var/www/html/iptvstream/bin/console app:import-data  > /dev/null
     private $users = [];
     /**
      * @var UserPasswordEncoderInterface
      */
     private $encoder;
     /**
-     * Connection to the Kimai v2 database to write imported data to
+     * Connection to the ipstream database to write imported data to
      * @var ManagerRegistry
      */
     private $doctrine;
@@ -112,6 +113,8 @@ class ImportDataCommand extends Command
         try {
             $counter = $this->importUsers($io,$users);
             $counter2 = $this->importBouquet($io,$bouquets);
+            $this->deleteBouquets($bouquets);
+            $this->deleteUsers($users);
            /* $io->success('Imported users: ' . $counter);*/
             $io->success('Imported bouquets: ' . count($users));
         } catch (Exception $ex) {
@@ -171,9 +174,6 @@ class ImportDataCommand extends Command
     }
     protected function importUsers(SymfonyStyle $io, $users)
     {
-        $config2 = new Configuration();
-        $connectionParams = ['url' => "mysql://symfony:Symfony123*@127.0.0.1:3306/iptvplus?charset=utf8"];
-        $connection2 = DriverManager::getConnection($connectionParams, $config2);
         $entityManager = $this->getDoctrine()->getManager();
         foreach ($users as $oldUser) {
             $user=$this->userRepository->findOneBy(['userid'=>$oldUser['id']]);
@@ -216,5 +216,31 @@ class ImportDataCommand extends Command
             $bouquet->setBouquetorder($oldbouquet['bouquet_order']);
             $this->doctrine->getManager()->flush();
         }
+    }
+    protected function deleteUsers($users){
+        $users_=$this->userRepository->findAll();
+        $fromIDS=array_map(function ($item){
+            return $item['id'];
+        },$users);
+        $notINS=array_filter($users_,function ($item) use ($fromIDS){
+           return !in_array($item->getUserid(),$fromIDS);
+        });
+        foreach ($notINS as $user){
+            $this->doctrine->getManager()->remove($user);
+        }
+        $this->doctrine->getManager()->flush();
+    }
+    protected function deleteBouquets($bouquets){
+        $bouquets_=$this->bouquetRepository->findAll();
+        $fromIDS=array_map(function ($item){
+            return $item['id'];
+        },$bouquets);
+        $notINS=array_filter($bouquets_,function ($item) use ($fromIDS){
+            return !in_array($item->getBouquetid(),$fromIDS);
+        });
+        foreach ($notINS as $user){
+            $this->doctrine->getManager()->remove($user);
+        }
+        $this->doctrine->getManager()->flush();
     }
 }
