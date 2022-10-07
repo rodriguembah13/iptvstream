@@ -6,6 +6,7 @@ use App\Entity\Bouquet;
 use App\Entity\Customer;
 use App\Entity\User;
 use App\Repository\BouquetRepository;
+use App\Repository\CustomerRepository;
 use App\Repository\UserRepository;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
@@ -61,16 +62,18 @@ class ImportDataCommand extends Command
     private $bouquetRepository;
     private $userRepository;
     private $logger;
+    private $customerRepository;
 
     /**
      * ImportDataCommand constructor.
+     * @param LoggerInterface $logger
      * @param BouquetRepository $bouquetRepository
      * @param UserRepository $userRepository
      * @param UserPasswordHasherInterface $encoder
      * @param ManagerRegistry $registry
      * @param ValidatorInterface $validator
      */
-    public function __construct(LoggerInterface $logger,BouquetRepository $bouquetRepository,UserRepository $userRepository,UserPasswordHasherInterface $encoder, ManagerRegistry $registry,
+    public function __construct(CustomerRepository $customerRepository,LoggerInterface $logger,BouquetRepository $bouquetRepository,UserRepository $userRepository,UserPasswordHasherInterface $encoder, ManagerRegistry $registry,
                                 ValidatorInterface $validator)
     {
         $this->encoder = $encoder;
@@ -79,6 +82,7 @@ class ImportDataCommand extends Command
         $this->userRepository=$userRepository;
         $this->bouquetRepository=$bouquetRepository;
         $this->logger=$logger;
+        $this->customerRepository=$customerRepository;
 
         parent::__construct();
     }
@@ -227,7 +231,9 @@ class ImportDataCommand extends Command
         });
         foreach ($notINS as $user){
             if ($user->getEmail() !="admin@localhost.com"){
+                $customer=$this->customerRepository->findOneBy(['compte'=>$user]);
                 $this->doctrine->getManager()->remove($user);
+                $this->doctrine->getManager()->remove($customer);
             }
 
         }
