@@ -44,10 +44,29 @@ class Souscription
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $status;
-
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $reference;
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReference()
+    {
+        return $this->reference;
+    }
+
+    /**
+     * @param mixed $reference
+     */
+    public function setReference($reference): void
+    {
+        $this->reference = $reference;
     }
 
     public function getBouquet(): ?Bouquet

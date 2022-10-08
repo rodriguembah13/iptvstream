@@ -167,8 +167,6 @@ class EndpointService
         return $valresp;
     }
     function getAllLists(){
-       /* $endpoint ="/get.php?username=".$this->params->get('API_USERNAME').
-            "&password=".$this->params->get('API_USERNAME')."&type=m3u_plus&output=m3u8";*/
         $endpoint =$this->params->get('API_URL')."/get.php";
         $res = $this->client->get($endpoint,
             ['query' => [

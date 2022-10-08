@@ -7,8 +7,10 @@ namespace App\Controller\Api;
 
 use App\Entity\Souscription;
 use App\Repository\BouquetRepository;
+use App\Repository\CustomerRepository;
 use App\Repository\UserRepository;
 use App\Service\paiement\EkolopayService;
+use App\Service\paiement\FlutterwaveService;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -27,16 +29,19 @@ class PaymentApiController extends AbstractFOSRestController
     private $doctrine;
     private $souscriptionRepository;
     private $bouquetRepository;
+    private $flutterService;
 
     /**
      * PaymentApiController constructor.
      * @param UserRepository $userRepository
+     * @param BouquetRepository $bouquetRepository
      * @param LoggerInterface $logger
      * @param EkolopayService $ekolopayService
      * @param EntityManagerInterface $entityManager
      */
-    public function __construct(UserRepository $userRepository,BouquetRepository $bouquetRepository,
-                                LoggerInterface $logger,EkolopayService $ekolopayService,
+    public function __construct(FlutterwaveService $flutterwaveService,UserRepository $userRepository,BouquetRepository $bouquetRepository,
+                                LoggerInterface $logger,EkolopayService $ekolopayService,CustomerRepository $customerRepository,
+
                                 EntityManagerInterface $entityManager)
     {
         $this->userRepository = $userRepository;
@@ -44,6 +49,8 @@ class PaymentApiController extends AbstractFOSRestController
         $this->logger = $logger;
         $this->doctrine=$entityManager;
         $this->bouquetRepository=$bouquetRepository;
+        $this->customerRepository=$customerRepository;
+        $this->flutterService=$flutterwaveService;
     }
 
     /**
@@ -83,31 +90,46 @@ class PaymentApiController extends AbstractFOSRestController
         $this->logger->error($this->getParameter("EKOLO_URL"));
         $res = json_decode($request->getContent(), true);
         $data=$res['data'];
-        $user = $this->userRepository->find($data['user_id']);
-        $customer=$this->customerRepository->findOneBy(['compte'=>$user]);
-
-        $bouquet=$this->bouquetRepository->find($data['bouquet']);
-        $client_body=[
-            'name'=>  $data['name'],
-            'phone'=>$data['phone'],
-            'amount'=>$bouquet->getPrice(),
+        $reference = "";
+        $allowed_characters = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+        for ($i = 1; $i <= 12; ++$i) {
+            $reference .= $allowed_characters[rand(0, count($allowed_characters) - 1)];
+        }
+        $customer=$this->customerRepository->find($data['customer_id']);
+        $bouquet=$this->bouquetRepository->find($data['bouquet_id']);
+        $notify_url = $this->generateUrl('notifyurlflutterajax', ['ref' => $reference, 'customer' => $customer->getId()]);
+        $notify_url = $this->params->get('domain') . $notify_url;
+        $data = [
+            'amount' => $bouquet->getPrice(),
+            'currency' => 'USD',
+            'payment_method' => 'card',
+            'country' => 'CMR',
+            'ref' => $reference,
+            'title' => 'Bouquet: '.$bouquet->getName(),
+            'description' => 'Voting session',
+            'email' => $data['email'],
+            'phonenumber' => $data['phone'],
+            'name' => 'Bouquet: '.$bouquet->getName(),
+            'last_name' => $customer->getCompte()->getName(),
+            'logo' => 'http://www.piedpiper.com/app/themes/joystick-v27/images/logo.png',
+            'pay_button_text' => "Valider le vote",
+            'successurl' => $notify_url,
+            'redirect_url' => $notify_url,
         ];
-        $response=$this->ekoloService->postRequest($client_body);
+        $response= $this->flutterService->postPayement($data);
+        $this->logger->info($notify_url);
         $arrays=[];
-        if ($response['code']==200){
-            $purchasetoken=$response['message'];
+        if ($response['status'] == "success"){
             $souscription=new Souscription();
             $souscription->setCustomer($customer);
             $souscription->setBouquet($bouquet);
             $souscription->setCreated(new \DateTime('now',new \DateTimeZone('Africa/Douala')));
             $souscription->setStatus(Souscription::PENDING);
-            //$souscription->set($purchasetoken);
             $this->doctrine->persist($souscription);
             $this->doctrine->flush();
-            $returnurl=$this->getParameter("EKOLO_URL")."/purchase-product/".$purchasetoken;
+            $returnurl= $response["data"]['link'];;
             $arrays=[
               'code'=>200,
-              'token'=>$purchasetoken,
                 'url'=>$returnurl,
               'message'=>'transaction send'
             ];

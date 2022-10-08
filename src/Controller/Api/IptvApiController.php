@@ -65,8 +65,41 @@ class IptvApiController extends AbstractFOSRestController
         return $this->handleView($view);
     }
     /**
+     * @Rest\Get("/v1/seriescategories", name="api_seriescategories")
+     * @return Response
+     */
+    public function getseriecategories()
+    {
+        $values = $this->endpointsService->getSeriesCategory();
+
+        $view = $this->view($values, Response::HTTP_OK, []);
+        return $this->handleView($view);
+    }
+    /**
+     * @Rest\Get("/v1/seriecategory", name="seriecategory")
+     * @return Response
+     */
+    public function getseriebycategory(Request $request)
+    {
+        $values = $this->endpointsService->getSeriebyCategory($request->get('category'));
+
+        $view = $this->view($values, Response::HTTP_OK, []);
+        return $this->handleView($view);
+    }
+    /**
+     * @Rest\Get("/v1/serieinfo", name="serieinfo")
+     * @return Response
+     */
+    public function getserieinfo(Request $request)
+    {
+        $values = $this->endpointsService->getSerieStreamInfoByID($request->get('serie'));
+
+        $view = $this->view($values, Response::HTTP_OK, []);
+        return $this->handleView($view);
+    }
+
+    /**
      * @Rest\Get("/v1/bouquets", name="api_bouquets")
-     * @param Customer $customer
      * @return Response
      */
     public function getBouquets()
