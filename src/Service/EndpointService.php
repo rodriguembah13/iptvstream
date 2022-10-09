@@ -70,7 +70,7 @@ class EndpointService
         return $valresp;
     }
     function getVodStreamCategory(){
-        $endpoint ="/player_api.php?username=".$this->params->get('API_USERNAME')."&password=".$this->params->get('API_USERNAME')."&action=category_vods";
+        $endpoint ="/player_api.php?username=".$this->params->get('API_USERNAME')."&password=".$this->params->get('API_USERNAME')."&action=get_vod_categories";
         $res = $this->client->get($endpoint);
         $valresp = json_decode($res->getBody(), true);
         $response = $valresp['response'];
