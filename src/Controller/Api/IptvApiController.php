@@ -82,7 +82,6 @@ class IptvApiController extends AbstractFOSRestController
     public function getmoviecategories()
     {
         $values = $this->endpointsService->getVodStreamCategory();
-
         $view = $this->view($values, Response::HTTP_OK, []);
         return $this->handleView($view);
     }

@@ -70,19 +70,18 @@ class EndpointService
         return $valresp;
     }
     function getVodStreamCategory(){
-        $endpoint ="/player_api.php?username=".$this->params->get('API_USERNAME')."&password=".$this->params->get('API_USERNAME')."&action=get_vod_categories";
+        $endpoint ="/player_api.php?username=".$this->params->get('API_USERNAME').
+            "&password=".$this->params->get('API_USERNAME')."&action=get_vod_categories";
         $res = $this->client->get($endpoint);
         $valresp = json_decode($res->getBody(), true);
-        $response = $valresp['response'];
-        return $response;
+        return $valresp;
     }
     function getVodStreambyCategory($category){
         $endpoint ="/player_api.php?username=".$this->params->get('API_USERNAME').
             "&password=".$this->params->get('API_USERNAME')."&action=get_vod_streams&category_id=".$category;
         $res = $this->client->get($endpoint);
         $valresp = json_decode($res->getBody(), true);
-        $response = $valresp['response'];
-        return $response;
+        return $valresp;
     }
     function getVodStreamInfoByID($id){
         $endpoint ="/player_api.php?username=".$this->params->get('API_USERNAME').
