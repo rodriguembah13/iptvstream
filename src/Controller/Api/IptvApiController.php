@@ -76,7 +76,33 @@ class IptvApiController extends AbstractFOSRestController
         return $this->handleView($view);
     }
     /**
+     * @Rest\Get("/v1/moviescategories", name="api_moviescategories")
+     * @return Response
+     */
+    public function getmoviecategories()
+    {
+        $values = $this->endpointsService->getVodStreamCategory();
+
+        $view = $this->view($values, Response::HTTP_OK, []);
+        return $this->handleView($view);
+    }
+
+    /**
+     * @Rest\Get("/v1/moviebycategory", name="api_moviebycategory")
+     * @param Request $request
+     * @return Response
+     */
+    public function getmoviesbycategory(Request $request)
+    {
+        $values = $this->endpointsService->getVodStreambyCategory($request->get('category'));
+
+        $view = $this->view($values, Response::HTTP_OK, []);
+        return $this->handleView($view);
+    }
+
+    /**
      * @Rest\Get("/v1/seriecategory", name="seriecategory")
+     * @param Request $request
      * @return Response
      */
     public function getseriebycategory(Request $request)
@@ -86,8 +112,10 @@ class IptvApiController extends AbstractFOSRestController
         $view = $this->view($values, Response::HTTP_OK, []);
         return $this->handleView($view);
     }
+
     /**
      * @Rest\Get("/v1/serieinfo", name="serieinfo")
+     * @param Request $request
      * @return Response
      */
     public function getserieinfo(Request $request)
